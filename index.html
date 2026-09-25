@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<title>خليجي 27 — البث المباشر</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B2D1E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="خليجي 27">
+<link rel="apple-touch-icon" href="KHALEEJI27.png">
+<link rel="icon" type="image/png" href="KHALEEJI27.png">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+:root {
+  --brand-green: #0B2D1E;
+  --brand-gold: #F5C242;
+  --brand-gold-dark: #D9A928;
+  --brand-bg: #F7F8F5;
+}
+
+html, body {
+  margin: 0; padding: 0; min-height: 100%;
+  width: 100%; max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background-color: var(--brand-bg);
+  text-align: center;
+}
+
+header {
+  width: 100%; max-width: 100%;
+  padding: 0; margin: 0;
+  line-height: 0;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  position: sticky; top: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+header img { width: 100%; height: auto; display: block; }
+
+.install-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--brand-gold);
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 10px;
+  padding: 9px 16px;
+  min-height: 44px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  z-index: 200;
+  font-family: 'Cairo', sans-serif;
+}
+.install-btn:hover { background: var(--brand-gold-dark); }
+.install-btn.show { display: flex; }
+
+.marquee-bar {
+  width: 100%; max-width: 100%;
+  overflow: hidden;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  background: var(--brand-gold);
+  color: var(--brand-green);
+  padding: 6px 0;
+  font-size: 13px;
+  font-weight: bold;
+  position: relative;
+  direction: ltr;
+  border-bottom: 1px solid rgba(0,0,0,0.18);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+}
+
+.marquee-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 86px;
+  padding: 0 12px;
+  background: #000;
+  color: var(--brand-gold);
+  font-size: 12px;
+  font-weight: 900;
+  direction: rtl;
+  box-shadow: -5px 0 10px rgba(0,0,0,0.12);
+}
+
+.marquee-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: #e53935;
+  box-shadow: 0 0 0 3px rgba(229,57,53,0.2);
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+.marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  min-height: 24px;
+  padding-right: 86px;
+  animation: marquee-scroll 36s linear infinite;
+  will-change: transform;
+}
+
+.marquee-item {
+  display: inline-block;
+  padding-inline: 42px;
+  white-space: nowrap;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 1;
+  color: #000;
+}
+
+.marquee-bar:hover .marquee-track,
+.marquee-bar:focus-within .marquee-track { animation-play-state: paused; }
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .55; transform: scale(.82); }
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+#player {
+  display: block;
+  width: 100%; max-width: 100%;
+  margin: 0; padding: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+}
+
+#player .video-wrap {
+  position: relative;
+  width: 100%; max-width: 100%;
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 16 / 9;
+  z-index: 1;
+}
+
+#player video, #player iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0; background: #000;
+  z-index: 1;
+}
+
+#msg {
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 10px auto;
+  max-width: 600px;
+  display: none;
+}
+
+.channels-overlay {
+  position: absolute;
+  top: 12px; left: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  z-index: 10;
+  padding: 6px 10px;
+  border-radius: 50px;
+  transition: opacity 0.4s ease;
+  opacity: 1;
+  pointer-events: auto;
+  max-width: calc(100% - 24px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  direction: ltr;
+}
+.channels-overlay::-webkit-scrollbar { display: none; }
+.channels-overlay.hidden { opacity: 0; pointer-events: none; }
+
+.channel-btn {
+  min-width: 44px; height: 44px; padding: 0 14px;
+  border-radius: 50px;
+  border: 2px solid rgba(255,255,255,.6);
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.channel-btn:hover { background: rgba(255,255,255,.25); border-color: #fff; transform: scale(1.08); }
+.channel-btn.active { background: rgba(255,255,255,.4); border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); color: #fff; }
+
+.players-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto;
+  padding: 10px 15px;
+  background: #f8f8f8;
+  border-radius: 12px;
+  max-width: 900px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 9999;
+  overflow: visible;
+}
+
+.primary-btn {
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  padding: 8px 16px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.primary-btn:hover { background: #f0f0f0; border-color: #999; }
+.primary-btn.active {
+  background: var(--brand-gold);
+  color: #000;
+  border-color: var(--brand-gold);
+  font-weight: 900;
+}
+
+.backup-btn {
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  padding: 8px 16px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.backup-btn:hover { background: #f0f0f0; border-color: #999; }
+.backup-btn.active {
+  background: var(--brand-gold);
+  color: #000;
+  border-color: var(--brand-gold);
+  font-weight: 900;
+}
+
+.retry-btn {
+  order: -1;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 50%;
+  background: var(--brand-green);
+  color: var(--brand-gold);
+  font: inherit;
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.retry-btn:hover { background: #164d35; transform: rotate(90deg); }
+.retry-btn:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 2px; }
+.retry-btn[hidden] { display: none; }
+
+.channels-menu-btn {
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  padding: 8px 16px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Cairo', sans-serif;
+}
+.channels-menu-btn:hover { background: #f0f0f0; border-color: #999; }
+.channels-menu-btn.show { display: flex; }
+
+.channels-menu-wrapper {
+  position: relative;
+  display: inline-flex;
+  z-index: 10000;
+}
+
+.channels-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 180px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  padding: 4px;
+  display: none;
+  z-index: 99999;
+}
+.channels-dropdown.show { display: block; }
+.channels-dropdown.drop-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.channels-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: #333;
+  font: inherit;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: right;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+.channels-dropdown-item:hover { background: #f0f0f0; color: #333; }
+.channels-dropdown-item.active {
+  background: var(--brand-gold);
+  color: #000;
+  font-weight: 900;
+}
+
+.youtube-section {
+  max-width: 1000px;
+  margin: 25px auto 40px;
+  padding: 0 15px;
+  position: relative;
+  z-index: 1;
+}
+.youtube-section h2 { font-size: 18px; color: #333; margin-bottom: 15px; font-weight: bold; }
+.youtube-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.youtube-pagination { display: flex; justify-content: center; gap: 6px; margin-top: 18px; }
+.youtube-pagination button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 9px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.youtube-pagination button:hover { background: #f0f0f0; }
+.youtube-pagination button.active { background: var(--brand-gold); border-color: var(--brand-gold); color: #000; font-weight: 900; }
+.yt-card { display: block; text-decoration: none; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.12); transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: pointer; }
+.yt-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+.yt-card .thumb { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; overflow: hidden; }
+.yt-card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+.yt-card:hover .thumb img { transform: scale(1.05); }
+.yt-card .thumb::after { content: "▶"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background: rgba(255,0,0,0.85); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; padding-right: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.4); transition: transform 0.2s ease; }
+.yt-card:hover .thumb::after { transform: translate(-50%, -50%) scale(1.15); }
+.yt-card .info { padding: 10px 12px; }
+.yt-card .info .title { font-size: 13px; font-weight: bold; color: #222; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.youtube-overlay { position: fixed; inset: 0; background: #000; z-index: 999999; display: none; flex-direction: column; }
+.youtube-overlay.show { display: flex; }
+.youtube-overlay .overlay-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #111; color: #fff; flex-shrink: 0; gap: 10px; }
+.youtube-overlay .overlay-header h3 { margin: 0; font-size: 15px; font-weight: bold; color: #fff; flex: 1; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.youtube-overlay .back-btn {
+  background: var(--brand-gold);
+  color: #000;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.youtube-overlay .back-btn:hover { background: var(--brand-gold-dark); }
+.youtube-overlay .overlay-video { flex: 1; position: relative; background: #000; }
+.youtube-overlay .overlay-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.site-footer {
+  width: 100%; max-width: 100%;
+  padding: 20px 15px;
+  background: #f8f8f8;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 30px;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+.site-footer p { margin: 0; font-size: 15px; line-height: 1.8; color: var(--brand-green); font-weight: 900; }
+.site-footer a { display: block; margin-top: 3px; color: var(--brand-gold-dark); text-decoration: none; font-size: 16px; font-weight: 900; transition: color 0.2s ease; }
+.site-footer a:hover { color: var(--brand-gold-dark); text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .channel-btn { min-width: 38px; height: 38px; font-size: 12px; padding: 0 10px; }
+  .channels-overlay { top: 8px; left: 8px; gap: 6px; padding: 4px 6px; }
+  .youtube-grid { gap: 10px; }
+  .yt-card .info .title { font-size: 12px; }
+  .yt-card .thumb::after { width: 40px; height: 40px; font-size: 16px; }
+  .youtube-overlay .overlay-header h3 { font-size: 13px; }
+  .youtube-overlay .back-btn { padding: 6px 12px; font-size: 13px; }
+  .players-bar { padding: 8px 10px; gap: 6px; }
+  .primary-btn, .backup-btn, .channels-menu-btn { padding: 6px 10px; font-size: 12px; }
+  .site-footer { padding: 15px 10px; }
+  .site-footer p { font-size: 13px; }
+  .site-footer a { font-size: 14px; }
+  .marquee-bar { min-height: 34px; padding: 4px 0; }
+  .marquee-label { min-width: 72px; padding: 0 8px; font-size: 11px; }
+  .marquee-label::before { width: 7px; height: 7px; flex-basis: 7px; }
+  .marquee-track { padding-right: 72px; animation-duration: 30s; }
+  .marquee-item { font-size: 12px; padding-inline: 28px; }
+  .install-btn { padding: 7px 11px; min-height: 38px; font-size: 12px; top: 8px; left: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .marquee-label::before { animation: none; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="https://raw.githubusercontent.com/h-80/img/refs/heads/main/kkk.png" alt="شعار الواجهة">
+  <button class="install-btn" id="installBtn" type="button">📲 تثبيت</button>
+</header>
+
+<div class="marquee-bar">
+  <span class="marquee-label" aria-hidden="true">مباشر</span>
+  <div class="marquee-track"></div>
+</div>
+
+<div id="player">
+  <div class="video-wrap" id="videoWrap">
+    <video id="videoEl" controls autoplay playsinline></video>
+    <div class="channels-overlay" id="channelsOverlay"></div>
+  </div>
+
+  <div class="players-bar">
+    <button type="button" class="primary-btn active" id="primaryBtn">🎬 المشغل الرئيسي</button>
+
+    <button type="button" class="backup-btn" id="backupBtn1">المشغل الاحتياطي</button>
+    <button type="button" class="retry-btn" id="retryBtn" aria-label="إعادة محاولة تشغيل البث" title="إعادة المحاولة" hidden>↻</button>
+
+    <div class="channels-menu-wrapper">
+      <button type="button" class="channels-menu-btn" id="channelsMenuBtn">
+        📋 القنوات
+      </button>
+      <div class="channels-dropdown" id="channelsDropdown"></div>
+    </div>
+
+  </div>
+
+  <div id="msg"></div>
+</div>
+
+<section class="youtube-section">
+  <h2>قنوات البث المباشر 🔴</h2>
+  <div class="youtube-grid" id="youtubeGrid"></div>
+  <nav class="youtube-pagination" id="youtubePagination" aria-label="ترقيم بطاقات البث"></nav>
+</section>
+
+<div class="youtube-overlay" id="youtubeOverlay">
+  <div class="overlay-header">
+    <h3 id="overlayTitle">🔴 قناة البث</h3>
+    <button class="back-btn" id="backBtn" type="button">← رجوع</button>
+  </div>
+  <div class="overlay-video" id="overlayVideo"></div>
+</div>
+
+<footer class="site-footer">
+  <p>
+    هذا الموقع برعاية 
+    <a href="https://afminfo.github.io/net" target="_blank" rel="noopener">الفحام نت</a>
+  </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<script src="https://cdn.jsdelivr.net/npm/shaka-player@4/dist/shaka-player.compiled.js"></script>
+
+<script>
+var MARQUEE_TEXT = `
+أهلا وسهلا بكم في بطولة كأس الخليج
+خليجي 27 - KHALEEJI 27
+نتمنى الفوز لجميع الفرق المشاركة بالبطولة
+شاهد البث المباشر لجميع مباريات بطولة كأس الخليج خليجي 27
+هذا الموقع بدعم ورعاية موقع الفحام نت . لتسهيل المشاهدة الى جمهورنا الرياضي في جميع البلدان العربية والعالمية
+🇰🇼  🇾🇪  🇶🇦  🇦🇪  🇧🇭  🇴🇲  🇸🇦  🇮🇶
+`;
+
+var CHANNELS_TEXT = `
+الكأس 1
+https://storage.googleapis.com/livealkass-eu/alkass1-p/main.m3u8
+عمان 1
+https://partneta.cdn.mgmlcdn.com/omsport/smil:omsport.stream.smil/chunklist.m3u8
+عمان 2
+https://partneta.cdn.mgmlcdn.com/omsport/smil:omsport.stream.smil/playlist.m3u8?stime=20260917231142&etime=20260925053822&token=00efd96a75c69bed8d26b
+الكويت 1
+https://kwtalmta.cdn.mangomolo.com/sp/smil:sp.stream.smil/chunklist.m3u8
+الكويت 2
+https://kwtsplta.cdn.mangomolo.com/spl/smil:spl.stream.smil/chunklist.m3u8
+البحرين 1
+https://5c7b683162943.streamlock.net/live/ngrp:sportsone_all/chunklist_w857028720_b1307000.m3u8
+البحرين 2
+https://5c7b683162943.streamlock.net/live/ngrp:bahrainsportstwo_all/playlist.m3u8
+العراقية الرياضية
+https://imn-live.esite-lab.com/hls/iraqia-sports-1.m3u8
+
+
+`;
+
+var YOUTUBE_TEXT = `
+
+الكأس 1
+https://www.youtube.com/live/-HPxgKxyvZY?si=ruWLyJY_mEFC4rqU
+
+ 
+`;
+
+function parsePairs(text) {
+  var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
+  var out = [];
+  for (var i = 0; i + 1 < lines.length; i += 2) {
+    out.push({ name: lines[i], url: lines[i + 1] });
+  }
+  return out;
+}
+
+var CHANNELS = parsePairs(CHANNELS_TEXT);
+var YOUTUBE_VIDEOS = parsePairs(YOUTUBE_TEXT);
+
+var currentPlayer = 'primary';
+var currentUrl = '';
+var currentChannelIndex = -1;
+var fallbackCycle = 0;
+
+var hlsInstance = null;
+var shakaPlayer = null;
+var engineToken = 0;
+
+var videoEl = document.getElementById('videoEl');
+var wrapEl = document.getElementById('videoWrap');
+var msgEl = document.getElementById('msg');
+var retryBtn = document.getElementById('retryBtn');
+
+function showMsg(text) {
+  msgEl.textContent = text;
+  msgEl.style.display = 'block';
+  retryBtn.hidden = !/^⚠/.test(text);
+}
+function hideMsg() {
+  msgEl.style.display = 'none';
+  msgEl.textContent = '';
+  retryBtn.hidden = true;
+}
+
+retryBtn.addEventListener('click', function() {
+  fallbackCycle = 0;
+  if (!currentUrl) return;
+  if (currentPlayer === 'backup1') {
+    playBackup1(currentUrl);
+  } else {
+    playPrimary(currentUrl);
+  }
+});
+
+function showIframe(src) {
+  wrapEl.querySelectorAll('video').forEach(function(v){ v.style.display = 'none'; });
+  var oldIframe = wrapEl.querySelector('iframe');
+  if (oldIframe) oldIframe.remove();
+  var iframe = document.createElement('iframe');
+  iframe.src = src;
+  iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  iframe.allowFullscreen = true;
+  iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:0;background:#000;z-index:1;';
+  wrapEl.appendChild(iframe);
+}
+
+function getYouTubeId(url) {
+  if (!url) return null;
+  try {
+    var parsed = new URL(url);
+    var host = parsed.hostname.toLowerCase();
+    var id = null;
+
+    if (host === 'youtu.be') {
+      id = parsed.pathname.split('/').filter(Boolean)[0];
+    } else if (host === 'youtube.com' || host.endsWith('.youtube.com')) {
+      id = parsed.searchParams.get('v');
+      if (!id) {
+        var pathMatch = parsed.pathname.match(/^\/(?:embed|live|shorts)\/([^/]+)/);
+        id = pathMatch ? pathMatch[1] : null;
+      }
+    }
+
+    return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+  } catch(e) {
+    return null;
+  }
+}
+
+function toYouTubeEmbed(url) { var id = getYouTubeId(url); return id ? 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0&enablejsapi=1' : null; }
+function toVimeoEmbed(url) { var m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/); return m ? 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1' : null; }
+function toFacebookEmbed(url) { return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&autoplay=1'; }
+function toDailymotionEmbed(url) { var m = url.match(/dailymotion\.com\/video\/([A-Za-z0-9]+)/); return m ? 'https://www.dailymotion.com/embed/video/' + m[1] + '?autoplay=1' : null; }
+function toTwitchEmbed(url) { var m = url.match(/twitch\.tv\/([A-Za-z0-9_]+)/); return m ? 'https://player.twitch.tv/?channel=' + m[1] + '&parent=' + location.hostname + '&autoplay=true' : null; }
+function toStreamableEmbed(url) { var m = url.match(/streamable\.com\/([A-Za-z0-9]+)/); return m ? 'https://streamable.com/e/' + m[1] + '?autoplay=1' : null; }
+function toTwitterEmbed(url) { return /twitter\.com|x\.com/.test(url) ? 'https://twitframe.com/show?url=' + encodeURIComponent(url) : null; }
+function toOkEmbed(url) { var m = url.match(/ok\.ru\/video\/(\d+)/); return m ? 'https://ok.ru/videoembed/' + m[1] + '?autoplay=1' : null; }
+function toVkEmbed(url) { var m = url.match(/vk\.com\/video(-?\d+)_(\d+)/); return m ? 'https://vk.com/video_ext.php?oid=' + m[1] + '&id=' + m[2] + '&autoplay=1' : null; }
+function toRumbleEmbed(url) { var m = url.match(/rumble\.com\/(?:embed\/)?([A-Za-z0-9]+)/); return m ? 'https://rumble.com/embed/' + m[1] + '/' : null; }
+function toBitchuteEmbed(url) { var m = url.match(/bitchute\.com\/video\/([A-Za-z0-9]+)/); return m ? 'https://www.bitchute.com/embed/' + m[1] + '/' : null; }
+function toOdyseeEmbed(url) { var m = url.match(/odysee\.com\/.*[:/]([A-Za-z0-9]+)/); return m ? 'https://odysee.com/$/embed/' + m[1] : null; }
+function toArchiveEmbed(url) { var m = url.match(/archive\.org\/details\/([^\/\?]+)/); return m ? 'https://archive.org/embed/' + m[1] : null; }
+function toMp4UploadEmbed(url) { var m = url.match(/mp4upload\.com\/(?:embed-)?([A-Za-z0-9]+)/); return m ? 'https://www.mp4upload.com/embed-' + m[1] + '.html' : null; }
+function toDoodEmbed(url) { var m = url.match(/dood(?:stream|\.)?\.?(?:com|to|so|pm|watch|sh|re|la|ws|gs|life|yt|li|si|cf|wtf|best|cx|nu|vip)\/(?:e|d)\/([A-Za-z0-9]+)/i); return m ? 'https://dood.to/e/' + m[1] : null; }
+function isDash(url) { return /\.mpd(\?.*)?$/i.test(url) || /format=mpd/i.test(url); }
+function isMkv(url) { return /\.mkv(\?.*)?$/i.test(url); }
+function isTs(url) { return /\.ts(\?.*)?$/i.test(url); }
+function isDirectVideo(url) { return /\.(mp4|webm|ogg|ogv|mov|m4v|3gp|m4s|mp3|aac|m4a)(\?.*)?$/i.test(url); }
+function isRtmp(url) { return /^rtmp:\/\//i.test(url); }
+function isRtsp(url) { return /^rtsp:\/\//i.test(url); }
+
+function stopAllPlayers() {
+  engineToken++;
+
+  try { if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; } } catch(e){}
+  try { if (shakaPlayer) { shakaPlayer.destroy(); shakaPlayer = null; } } catch(e){}
+
+  document.querySelectorAll('audio, video').forEach(function(media) {
+    try {
+      media.pause();
+      media.muted = true;
+      media.volume = 0;
+      media.removeAttribute('src');
+      media.load();
+    } catch(e){}
+  });
+
+  wrapEl.querySelectorAll('iframe').forEach(function(frame) { frame.remove(); });
+  wrapEl.querySelectorAll('[data-player-host]').forEach(function(host) { host.remove(); });
+  hideMsg();
+}
+
+function ensureFreshVideo() {
+  try {
+    var oldVideo = document.getElementById('videoEl');
+    if (oldVideo && oldVideo.parentNode) {
+      try { oldVideo.pause(); } catch(e){}
+      try { oldVideo.removeAttribute('src'); } catch(e){}
+      try { oldVideo.load(); } catch(e){}
+      oldVideo.parentNode.removeChild(oldVideo);
+    }
+
+    videoEl = document.createElement('video');
+    videoEl.id = 'videoEl';
+    videoEl.controls = true;
+    videoEl.autoplay = true;
+    videoEl.playsInline = true;
+    videoEl.setAttribute('playsinline', '');
+    videoEl.setAttribute('webkit-playsinline', '');
+    videoEl.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:#000;z-index:1;';
+
+    if (wrapEl.firstChild) {
+      wrapEl.insertBefore(videoEl, wrapEl.firstChild);
+    } else {
+      wrapEl.appendChild(videoEl);
+    }
+  } catch(e) {
+    console.error('ensureFreshVideo error:', e);
+  }
+}
+
+function playPrimary(url) {
+  stopAllPlayers();
+  currentUrl = url;
+  showMsg('⏳ جاري تشغيل المشغل الرئيسي...');
+  setTimeout(hideMsg, 1500);
+
+  ensureFreshVideo();
+
+  var yt = toYouTubeEmbed(url);        if (yt) { showIframe(yt); return; }
+  var vm = toVimeoEmbed(url);          if (vm) { showIframe(vm); return; }
+  if (/facebook\.com|fb\.watch/.test(url)) { showIframe(toFacebookEmbed(url)); return; }
+  var dm = toDailymotionEmbed(url);    if (dm) { showIframe(dm); return; }
+  var tw = toTwitchEmbed(url);         if (tw) { showIframe(tw); return; }
+  var st = toStreamableEmbed(url);     if (st) { showIframe(st); return; }
+  var tx = toTwitterEmbed(url);        if (tx) { showIframe(tx); return; }
+  var ok = toOkEmbed(url);             if (ok) { showIframe(ok); return; }
+  var vk = toVkEmbed(url);             if (vk) { showIframe(vk); return; }
+  var rb = toRumbleEmbed(url);         if (rb) { showIframe(rb); return; }
+  var bc = toBitchuteEmbed(url);       if (bc) { showIframe(bc); return; }
+  var od = toOdyseeEmbed(url);         if (od) { showIframe(od); return; }
+  var ar = toArchiveEmbed(url);        if (ar) { showIframe(ar); return; }
+  var mu = toMp4UploadEmbed(url);      if (mu) { showIframe(mu); return; }
+  var dd = toDoodEmbed(url);           if (dd) { showIframe(dd); return; }
+
+  if (isRtmp(url) || isRtsp(url)) { showMsg('⚠ رابط RTMP/RTSP لا يعمل في المتصفح.'); return; }
+
+  if (isDash(url)) {
+    if (window.shaka && shaka.Player.isBrowserSupported()) {
+      shakaPlayer = new shaka.Player(videoEl);
+      shakaPlayer.load(url).then(function() { videoEl.play(); }).catch(function() {
+        try { shakaPlayer.destroy(); } catch(e) {}
+        shakaPlayer = null;
+        showMsg('⚠ فشل تشغيل رابط DASH');
+      });
+    } else { showMsg('⚠ المتصفح لا يدعم DASH'); }
+    return;
+  }
+
+  if (isMkv(url) || isTs(url)) {
+    videoEl.src = url;
+    videoEl.play().catch(function() { showMsg('⚠ الصيغة غير مدعومة'); });
+    return;
+  }
+
+  if (isDirectVideo(url)) {
+    videoEl.src = url;
+    videoEl.play().catch(function() { showMsg('⚠ تعذّر التشغيل'); });
+    return;
+  }
+
+  var token = ++engineToken;
+  var engines = ['hlsjs', 'native'];
+  var index = 0;
+
+  function tryNext() {
+    if (token !== engineToken) return;
+    if (index >= engines.length) {
+      if (fallbackCycle === 0) {
+        fallbackCycle = 1;
+        showMsg('⚠ تعذر التشغيل، جاري الانتقال للمشغل الاحتياطي...');
+        setTimeout(function() {
+          if (token === engineToken) switchPlayer('backup1', true);
+        }, 500);
+      } else {
+        showMsg('⚠ تعذر تشغيل الرابط بالمشغلين المتاحين.');
+      }
+      return;
+    }
+    var engine = engines[index++];
+
+    if (engine === 'hlsjs' && window.Hls && Hls.isSupported()) {
+      try {
+        hlsInstance = new Hls();
+        hlsInstance.loadSource(url);
+        hlsInstance.attachMedia(videoEl);
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function(){ videoEl.play().catch(function(){}); });
+        hlsInstance.on(Hls.Events.ERROR, function(e, data){
+          if (data && data.fatal && token === engineToken) {
+            try { hlsInstance.destroy(); } catch(error) {}
+            hlsInstance = null;
+            tryNext();
+          }
+        });
+      } catch(e) { tryNext(); }
+      return;
+    }
+    if (engine === 'native') {
+      try {
+        videoEl.src = url;
+        videoEl.onerror = function(){ if (token === engineToken) tryNext(); };
+        videoEl.play().catch(function(){ if (token === engineToken) tryNext(); });
+      } catch(e) { tryNext(); }
+      return;
+    }
+    tryNext();
+  }
+  tryNext();
+}
+
+function playBackup1(url) {
+  stopAllPlayers();
+  currentUrl = url;
+  showMsg('⏳ جاري تشغيل المشغل الاحتياطي...');
+
+  var yt = toYouTubeEmbed(url);
+  var vm = toVimeoEmbed(url);
+  if (yt || vm || /facebook\.com|fb\.watch/.test(url)) {
+    returnToPrimary('⚠ المشغل الاحتياطي لا يدعم هذا النوع من الروابط.');
+    return;
+  }
+
+  if (!window.shaka || !shaka.Player.isBrowserSupported()) {
+    returnToPrimary('⚠ المتصفح لا يدعم المشغل الاحتياطي.');
+    return;
+  }
+
+  try {
+    if (!document.getElementById('videoEl')) {
+      ensureFreshVideo();
+    } else {
+      videoEl = document.getElementById('videoEl');
+    }
+
+    videoEl.style.display = 'block';
+    videoEl.controls = true;
+
+    try { videoEl.muted = false; videoEl.volume = 1; } catch(e){}
+
+    shakaPlayer = new shaka.Player(videoEl);
+    try { shakaPlayer.configure({ abr: { enabled: true } }); } catch(e){}
+
+    shakaPlayer.load(url).then(function() {
+      hideMsg();
+      try { videoEl.muted = false; videoEl.volume = 1; } catch(e){}
+      videoEl.play().then(function() {
+        try { videoEl.muted = false; videoEl.volume = 1; } catch(e){}
+      }).catch(function() {
+        try { videoEl.muted = false; } catch(e){}
+      });
+    }).catch(function(err) {
+      console.error('Shaka error:', err);
+      returnToPrimary('⚠ فشل تشغيل الرابط بالمشغل الاحتياطي.');
+    });
+  } catch(e) {
+    console.error('Shaka catch:', e);
+    returnToPrimary('⚠ حدث خطأ في المشغل الاحتياطي.');
+  }
+}
+
+function returnToPrimary(message) {
+  var token = engineToken;
+  fallbackCycle = Math.min(fallbackCycle + 1, 2);
+  showMsg(message + ' جاري الرجوع للمشغل الرئيسي...');
+  setTimeout(function() {
+    if (token === engineToken && currentPlayer === 'backup1') {
+      switchPlayer('primary', true);
+    }
+  }, 1200);
+}
+
+function switchPlayer(player, automatic) {
+  if (!automatic) fallbackCycle = 0;
+  currentPlayer = player;
+
+  document.querySelectorAll('.primary-btn, .backup-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+
+  if (player === 'primary') {
+    document.getElementById('primaryBtn').classList.add('active');
+  } else if (player === 'backup1') {
+    document.getElementById('backupBtn1').classList.add('active');
+  }
+
+  if (currentUrl) {
+    if (player === 'primary') {
+      playPrimary(currentUrl);
+    } else if (player === 'backup1') {
+      playBackup1(currentUrl);
+    }
+  }
+}
+
+var channelsOverlay = document.getElementById('channelsOverlay');
+var channelsMenuBtn = document.getElementById('channelsMenuBtn');
+var channelsDropdown = document.getElementById('channelsDropdown');
+var hideTimer = null;
+
+function buildChannelButtons() {
+  channelsOverlay.innerHTML = '';
+  CHANNELS.forEach(function(ch, index) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'channel-btn';
+    btn.textContent = ch.name || String(index + 1);
+    btn.dataset.index = index;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      switchChannel(index);
+      showOverlayTemporarily();
+    });
+    channelsOverlay.appendChild(btn);
+  });
+}
+
+function buildChannelsDropdown() {
+  channelsDropdown.innerHTML = '';
+  CHANNELS.forEach(function(ch, index) {
+    var item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'channels-dropdown-item';
+    item.textContent = ch.name || ('قناة ' + (index + 1));
+    item.dataset.index = index;
+    item.addEventListener('click', function(e) {
+      e.stopPropagation();
+      switchChannel(index);
+      channelsDropdown.classList.remove('show');
+    });
+    channelsDropdown.appendChild(item);
+  });
+}
+
+function updateDropdownActive(index) {
+  channelsDropdown.querySelectorAll('.channels-dropdown-item').forEach(function(item, i) {
+    item.classList.toggle('active', i === index);
+  });
+}
+
+function switchChannel(index) {
+  var ch = CHANNELS[index];
+  if (!ch || !ch.url) return;
+  currentChannelIndex = index;
+  fallbackCycle = 0;
+
+  document.querySelectorAll('.channel-btn').forEach(function(b, i) {
+    b.classList.toggle('active', i === index);
+  });
+  updateDropdownActive(index);
+
+  if (currentPlayer === 'primary') {
+    playPrimary(ch.url);
+  } else if (currentPlayer === 'backup1') {
+    playBackup1(ch.url);
+  }
+}
+
+function showOverlayTemporarily() {
+  channelsOverlay.classList.remove('hidden');
+  if (hideTimer) clearTimeout(hideTimer);
+  hideTimer = setTimeout(function() {
+    channelsOverlay.classList.add('hidden');
+  }, 3000);
+}
+
+function attachOverlayAutoHide() {
+  wrapEl.addEventListener('mousemove', showOverlayTemporarily);
+  wrapEl.addEventListener('touchstart', showOverlayTemporarily);
+  wrapEl.addEventListener('mouseleave', function() {
+    channelsOverlay.classList.add('hidden');
+  });
+  showOverlayTemporarily();
+}
+
+channelsMenuBtn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  var shouldOpen = !channelsDropdown.classList.contains('show');
+  channelsDropdown.classList.toggle('show', shouldOpen);
+
+  if (shouldOpen) {
+    var buttonRect = channelsMenuBtn.getBoundingClientRect();
+    var dropdownHeight = Math.min(channelsDropdown.scrollHeight, 300);
+    var spaceBelow = window.innerHeight - buttonRect.bottom;
+    var spaceAbove = buttonRect.top;
+    channelsDropdown.classList.toggle('drop-up', spaceBelow < dropdownHeight + 12 && spaceAbove > spaceBelow);
+  } else {
+    channelsDropdown.classList.remove('drop-up');
+  }
+});
+
+document.addEventListener('click', function(event) {
+  if (!event.target.closest('.channels-menu-wrapper')) {
+    channelsDropdown.classList.remove('show');
+    channelsDropdown.classList.remove('drop-up');
+  }
+});
+
+window.addEventListener('resize', function() {
+  channelsDropdown.classList.remove('show');
+  channelsDropdown.classList.remove('drop-up');
+});
+
+function initChannelsMenu() {
+  if (CHANNELS.length > 1) {
+    channelsMenuBtn.classList.add('show');
+  } else {
+    channelsMenuBtn.classList.remove('show');
+  }
+}
+
+/* ============================================================
+   📢 بناء الشريط المتحرك — كل رسالة span منفصل + مسافة واضحة
+   ============================================================ */
+function buildMarquee() {
+  var track = document.querySelector('.marquee-track');
+  if (!track) return;
+
+  var messages = MARQUEE_TEXT
+    .split('\n')
+    .map(function(l) { return l.trim(); })
+    .filter(function(l) { return l.length > 0; });
+
+  YOUTUBE_VIDEOS.forEach(function(item) {
+    if (item.name) messages.push('بث مباشر: ' + item.name);
+  });
+
+  if (messages.length === 0) return;
+
+  track.innerHTML = '';
+
+  function addSet() {
+    messages.forEach(function(msg) {
+      var span = document.createElement('span');
+      span.className = 'marquee-item';
+      span.textContent = '. ' + msg;
+      track.appendChild(span);
+    });
+  }
+
+  /* نسختين للتدوير السلس */
+  addSet();
+  addSet();
+}
+
+var youtubePage = 1;
+var youtubePageSize = 10;
+
+function buildYouTubeCards() {
+  var grid = document.getElementById('youtubeGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  var totalPages = Math.max(1, Math.ceil(YOUTUBE_VIDEOS.length / youtubePageSize));
+  youtubePage = Math.min(youtubePage, totalPages);
+  var start = (youtubePage - 1) * youtubePageSize;
+  var pageItems = YOUTUBE_VIDEOS.slice(start, start + youtubePageSize);
+
+  pageItems.forEach(function(item) {
+    var id = getYouTubeId(item.url);
+    if (!id) return;
+
+    var card = document.createElement('a');
+    card.className = 'yt-card';
+    card.href = '#';
+
+    var thumb = document.createElement('div');
+    thumb.className = 'thumb';
+    var img = document.createElement('img');
+    img.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+    img.alt = item.name || 'YouTube';
+    img.loading = 'lazy';
+    img.onerror = function() { this.src = 'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg'; };
+    thumb.appendChild(img);
+
+    var info = document.createElement('div');
+    info.className = 'info';
+    var title = document.createElement('p');
+    title.className = 'title';
+    title.textContent = item.name || 'بث مباشر';
+    info.appendChild(title);
+
+    card.appendChild(thumb);
+    card.appendChild(info);
+
+    card.addEventListener('click', function(e) {
+      e.preventDefault();
+      openYouTubeOverlay(item.url, item.name);
+    });
+
+    grid.appendChild(card);
+  });
+
+  buildYouTubePagination(totalPages);
+}
+
+function buildYouTubePagination(totalPages) {
+  var pagination = document.getElementById('youtubePagination');
+  if (!pagination) return;
+  pagination.innerHTML = '';
+  pagination.hidden = totalPages <= 1;
+  if (totalPages <= 1) return;
+
+  for (var page = 1; page <= totalPages; page += 1) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = String(page);
+    button.setAttribute('aria-label', 'الصفحة ' + page);
+    button.classList.toggle('active', page === youtubePage);
+    button.addEventListener('click', function() {
+      youtubePage = Number(this.textContent);
+      buildYouTubeCards();
+      document.querySelector('.youtube-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    pagination.appendChild(button);
+  }
+}
+
+var youtubeOverlay = document.getElementById('youtubeOverlay');
+var overlayVideo = document.getElementById('overlayVideo');
+var overlayTitle = document.getElementById('overlayTitle');
+var backBtn = document.getElementById('backBtn');
+var overlayOpen = false;
+var overlayResumeUrl = '';
+var overlayResumePlayer = 'primary';
+
+function openYouTubeOverlay(url, name, restoring) {
+  var id = getYouTubeId(url);
+  if (!id) return;
+
+  overlayResumeUrl = currentUrl;
+  overlayResumePlayer = currentPlayer;
+  stopAllPlayers();
+  overlayVideo.innerHTML = '';
+  overlayTitle.textContent = '🔴 ' + (name || 'قناة البث');
+
+  var iframe = document.createElement('iframe');
+  iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0&enablejsapi=1';
+  iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  iframe.allowFullscreen = true;
+  overlayVideo.appendChild(iframe);
+
+  youtubeOverlay.classList.add('show');
+  overlayOpen = true;
+
+  if (!restoring) {
+    try { history.pushState({ view: 'youtube' }, '', '#yt=' + id); } catch(e){}
+  }
+  document.body.style.overflow = 'hidden';
+}
+
+function restoreYouTubeOverlay() {
+  var match = location.hash.match(/^#yt=([A-Za-z0-9_-]{11})$/);
+  if (!match) return false;
+
+  var video = YOUTUBE_VIDEOS.find(function(item) {
+    return getYouTubeId(item.url) === match[1];
+  });
+  if (!video) return false;
+
+  openYouTubeOverlay(video.url, video.name, true);
+  return true;
+}
+
+function closeYouTubeOverlay(fromPopstate) {
+  if (!overlayOpen) return;
+  overlayVideo.innerHTML = '';
+  youtubeOverlay.classList.remove('show');
+  overlayOpen = false;
+  document.body.style.overflow = '';
+
+  var resumeUrl = overlayResumeUrl;
+  var resumePlayer = overlayResumePlayer;
+  overlayResumeUrl = '';
+  if (resumeUrl) {
+    currentUrl = resumeUrl;
+    currentPlayer = resumePlayer;
+    if (resumePlayer === 'backup1') {
+      playBackup1(resumeUrl);
+    } else {
+      playPrimary(resumeUrl);
+    }
+  }
+
+  if (!fromPopstate) {
+    if (history.state && history.state.view === 'youtube') {
+      try { history.back(); } catch(e){}
+      return;
+    }
+  }
+}
+
+backBtn.addEventListener('click', function() { closeYouTubeOverlay(false); });
+window.addEventListener('popstate', function() {
+  if (overlayOpen) closeYouTubeOverlay(true);
+});
+
+document.getElementById('primaryBtn').addEventListener('click', function() {
+  if (currentPlayer === 'primary') return;
+  switchPlayer('primary');
+});
+
+document.getElementById('backupBtn1').addEventListener('click', function() {
+  if (currentPlayer === 'backup1') return;
+  switchPlayer('backup1');
+});
+
+window.addEventListener('pagehide', function() { stopAllPlayers(); });
+window.addEventListener('beforeunload', function() { stopAllPlayers(); });
+
+var audioUnlocked = false;
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  document.querySelectorAll('video, audio').forEach(function(media) {
+    try {
+      if (media.muted || media.volume === 0) {
+        media.muted = false;
+        media.volume = 1;
+      }
+      if (media.paused && media.readyState > 2) {
+        media.play().catch(function(){});
+      }
+    } catch(e){}
+  });
+
+  try {
+    if (shakaPlayer && videoEl) {
+      videoEl.muted = false;
+      videoEl.volume = 1;
+      if (videoEl.paused) {
+        videoEl.play().catch(function(){});
+      }
+    }
+  } catch(e){}
+
+  try {
+    document.querySelectorAll('iframe').forEach(function(iframe) {
+      if (iframe.contentWindow && iframe.src.indexOf('youtube.com') > -1) {
+        iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+        iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
+      }
+    });
+  } catch(e){}
+}
+
+document.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
+document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+document.addEventListener('keydown', unlockAudio, { once: true, passive: true });
+
+var deferredPrompt = null;
+var installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.classList.add('show');
+});
+
+installBtn.addEventListener('click', function() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(choice) {
+    if (choice.outcome === 'accepted') {
+      installBtn.classList.remove('show');
+    }
+    deferredPrompt = null;
+  });
+});
+
+window.addEventListener('appinstalled', function() {
+  installBtn.classList.remove('show');
+  deferredPrompt = null;
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function(err) {
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+
+buildChannelButtons();
+buildChannelsDropdown();
+buildMarquee();
+initChannelsMenu();
+attachOverlayAutoHide();
+buildYouTubeCards();
+
+try { history.scrollRestoration = 'manual'; } catch(e){}
+if (CHANNELS.length > 0 && CHANNELS[0].url) {
+  switchChannel(0);
+}
+
+var restoredYouTube = restoreYouTubeOverlay();
+if (!restoredYouTube) window.scrollTo(0, 0);
+</script>
+
+</body>
+</html>
