@@ -1,10 +1,11 @@
 /* Service Worker بسيط لـ PWA */
-var CACHE_NAME = 'khaleeji27-v3';
+var CACHE_NAME = 'noor-sport-v6';
 var urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  './KHALEEJI27.png'
+  './noor-icon.png',
+  './noor-icon-192.png'
 ];
 
 self.addEventListener('install', function(event) {
